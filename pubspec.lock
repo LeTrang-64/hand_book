@@ -33,6 +33,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  benchmark_harness:
+    dependency: "direct main"
+    description:
+      name: benchmark_harness
+      sha256: "683bdcf9d96ec6f244d383a8b07f329fe64f0d3ef51739b82417ce904dd29d03"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
+  benchmarking:
+    dependency: "direct main"
+    description:
+      name: benchmarking
+      sha256: "6b7f6955e8b0b6ce0dd4c3bc5611430aac017a74923669ad3687b718e5085c6a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -193,6 +209,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  equatable:
+    dependency: "direct dev"
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -461,6 +485,22 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  socket_io_client:
+    dependency: "direct main"
+    description:
+      name: socket_io_client
+      sha256: "5d2a0a12c2a4a5f48d14e5b6aef7db78d3b425a9b084071059fa54bd12d2576c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
+  socket_io_common:
+    dependency: transitive
+    description:
+      name: socket_io_common
+      sha256: "2ab92f8ff3ebbd4b353bf4a98bee45cc157e3255464b2f90f66e09c4472047eb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   source_span:
     dependency: transitive
     description:

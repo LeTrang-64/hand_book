@@ -20,6 +20,11 @@ void main() {
   runApp(const MyApp());
 }
 ```
+
+We can do this by wrapping the widget which is changing inside the RepaintBoundary widget, it will tell the framework explicitly not to paint anything outside it.
+
+Below is the example when you enable RepaintBoundary widget
+
 ## Preview
 
 ![repaint_boundar](resources/gif/repaint_boundary_2.gif)
