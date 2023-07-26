@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     print("######## MyHomePage");
-    return Gess(
+    return GestureDetector(
       onTap: _focusNode.requestFocus,
 
       child: Scaffold(

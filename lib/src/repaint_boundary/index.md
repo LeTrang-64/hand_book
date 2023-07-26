@@ -1,10 +1,4 @@
-# cf_multi_picker
 
-RepaintBoundary
-
-## Usage
-
-To use this plugin, add cf_multi_picker as a dependency in your pubspec.yaml file.
 
 ## Example
 ![repaint_boundar](resources/gif/repaint_boundary.gif)
