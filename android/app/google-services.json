@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "11134349530",
+    "project_id": "flutter-handbook",
+    "storage_bucket": "flutter-handbook.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:11134349530:android:e01118210cf740e2a435e3",
+        "android_client_info": {
+          "package_name": "com.my.handbook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoK_QHeJSyUfetQ7StGwmXKrs_KSab7MM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

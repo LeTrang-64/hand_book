@@ -12,6 +12,7 @@ void main() {
   print(listOf[0] == listFrom[1]);
   // print(listEquals(listOf, listFrom));
   print(testMix.toSet().toList());
+  print(10.0 as int);
 }
 
 class Cat extends Equatable {

@@ -2,7 +2,7 @@
     package="com.example.flutter_handbook">
    <application
         android:label="flutter_handbook"
-        android:name="${applicationName}"
+        android:exported="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
