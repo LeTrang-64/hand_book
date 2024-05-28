@@ -1,0 +1,20 @@
+{
+  "mainScreen": {
+    "title": "Ein deutscher Titel",
+    "counter": {
+      "one": "Du hast einmal gedrückt.",
+      "other": "Du hast $n mal gedrückt."
+    },
+    "counter2": {
+      "me": {
+        "one": "You pressed $name time."
+      },
+      "other": "You pressed $n times."
+    },
+    "tapMe": "Drück mich"
+  },
+  "locales(map)": {
+    "en": "Englisch",
+    "de": "Deutsch"
+  }
+}

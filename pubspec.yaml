@@ -43,11 +43,21 @@ dependencies:
   dio: ^5.1.2
   cached_network_image: ^3.2.3
   google_maps_flutter: ^2.3.0
+  floating:
+  video_player:
+  slang:
+  slang_flutter:
+  flutter_localization:
+  permission_handler:
+  photo_manager:
+  image:
+  image_gallery_saver:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner:
+  slang_build_runner:
   flutter_gen_runner: ^4.1.2+2
   equatable: ^2.0.3
 
