@@ -1,0 +1,12 @@
+- build.gradle 2 vị trí
+- tầng project:
+- buildscript:
+- repositories: lưu 
+- dependencies
+- tầng app:
+- compileSdkVersion: mỗi bản android có 1 bộ SDK, ứng dụng compile trên SDK đc config ở compileSdkVersion
+- ndkVersion: The Android NDK is a toolset that lets you implement parts of your app in native code, using languages such as C and C++
+- applicationId: packageId ứng với ứng dụng trên store
+- minSdkVersion: SDK tối thiểu yêu cầu device
+- targetSdkVersion: ứng dụng compile và work trên phiên bản targetSdkVersion [https://viblo.asia/p/su-khac-nhau-giua-compilesdkversion-va-targetsdkversion-bWrZnr6OZxw]
+- multiDexEnabled: tăng heap của việc build giúp build method ko bị giới hạn khi tổng số method > 64000 method
