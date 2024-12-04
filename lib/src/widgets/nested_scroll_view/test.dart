@@ -1,174 +1,247 @@
-import 'package:flutter/cupertino.dart';
+// Copyright 2019 the Dart project authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license
+// that can be found in the LICENSE file.
+
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_handbook/src/widgets/nested_scroll_view/sliver_pined_overlap.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:sticky_headers/sticky_headers/render.dart';
+import 'package:sticky_headers/sticky_headers/widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
-void main() => runApp(const MyApp());
+import 'examples/list.dart';
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
+void main() {
+  runApp(MaterialApp(home: TabBarViewDemo()));
 }
 
-class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
-  late TabController tabCtrl;
-  var _container = Container(
-    height: 200,
-    color: Colors.blue,
-    margin: EdgeInsets.symmetric(vertical: 10),
-  );
+class _Page {
+  const _Page(
+    this.id,
+    this.title,
+    this.color,
+  )   : assert(id != null),
+        assert(title != null),
+        assert(color != null);
 
-  @override
-  void initState() {
-    tabCtrl = TabController(
-      length: 2,
-      vsync: this,
-    );
-    ;
-    super.initState();
-  }
+  final int id;
+  final String title;
+  final Color color;
+}
 
+final List<_Page> _allPages = <_Page>[
+  _Page(1, 'Item 1', Colors.orange),
+  _Page(2, 'Item 2', Colors.red),
+  _Page(3, 'Item 3', Colors.blue),
+  _Page(4, 'Item 4', Colors.green),
+];
+
+class TabBarViewDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-      body: Container(
-        child: _test3(),
-      ),
-    ));
-  }
-
-  Widget _test1() {
-    return NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        return <Widget>[
-          SliverAppBar(
-            pinned: true,
-            title: Text('Flutter Demo'),
-          ),
-        ];
-      },
-      body: Column(
-        children: <Widget>[
-          _container,
-          Container(
-            height: 700,
-            child: ListView.builder(
-              itemCount: 60,
-              itemBuilder: (BuildContext context, int index) {
-                return Text('Item $index');
-              },
-            ),
-          ),
-          _container,
-          _container,
-        ],
-      ),
-    );
-  }
-
-  final List<String> tabs = <String>['Tab 1', 'Tab 2'];
-
-  Widget _test2() {
-    return NestedScrollView(
-      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        // These are the slivers that show up in the "outer" scroll view.
-        return <Widget>[
-
-          SliverAppBar(
-            floating: false,
-            pinned: true,
-            snap: false,
-            expandedHeight: 160,
-            flexibleSpace: FlexibleSpaceBar(
-              title: innerBoxIsScrolled ? Text('Profile') : null,
-              background: Column(
-                children: [Text('Profile')],
+    return DefaultTabController(
+      length: _allPages.length,
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              new SliverOverlapAbsorber(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: _buildSliverAppBar(context),
               ),
-            ),
-            // bottom: ,
+            ];
+          },
+          body: new TabBarView(
+            children: _allPages
+                .map(
+                  (page) => SafeArea(
+                    top: false,
+                    bottom: false,
+                    child: new Builder(
+                      builder: (context) {
+                        return _buildTabBarView(context, page);
+                      },
+                    ),
+                  ),
+                )
+                .toList(),
           ),
-        ];
-      },
-      body: ListView(
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          Container(
-            child: Column(
-              children: [
-                Container(
-                  height: 200,
-                  color: Colors.yellow,
-                ),
-                Container(
-                  height: 400,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 30,
-                      itemBuilder: (_, index) => ListTile(
-                            title: Text('Item $index'),
-                          )),
-                ),
-              ],
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
-  Widget _test3() {
-    return CustomScrollView(
-      slivers: [
-        SliverLayoutBuilder(
-          builder: (BuildContext context, constraints) {
-            final scrolled = constraints.scrollOffset > 0;
-            return SliverAppBar(
-              backgroundColor: Colors.transparent,
-              title: Text("App bar", style: TextStyle(color: scrolled ? Colors.blue : Colors.red),),
-              pinned: true,
-              floating: true,
-            );
-          },
-        ),
-        SliverToBoxAdapter(
-          child: Container(
-            height: 200,
-            color: Colors.yellow,
-          ),
-        ),SliverToBoxAdapter(
-          child: Container(
-            height: 200,
-            color: Colors.red,
-          ),
-        ),SliverToBoxAdapter(
-          child: Container(
-            height: 200,
-            color: Colors.green,
-          ),
 
+  Widget _buildTabBarView(BuildContext context, _Page page) {
+    List<Widget> slivers = <Widget>[];
+
+    slivers.add(new SliverObstructionInjector(
+        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)));
+    slivers.addAll(_buildSideHeaderGrids(0, 5, page.color));
+
+    return CustomScrollView(
+      key: PageStorageKey<_Page>(page),
+      slivers: slivers,
+    );
+  }
+
+  Widget _buildSliverAppBar(BuildContext context) {
+    return SliverAppBar(
+      pinned: true,
+      expandedHeight: 150.0,
+      title: Text('Main AppBar'),
+      bottom: TabBar(
+        tabs: _allPages
+            .map(
+              (p) => new Tab(
+                child: Text(p.title),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  List<Widget> _buildSideHeaderGrids(int firstIndex, int count, Color color) {
+    return List.generate(count, (sliverIndex) {
+      sliverIndex += firstIndex;
+      return new SliverStickyHeader(
+        overlapsContent: true,
+        header: _buildSideHeader(sliverIndex, color),
+        sliver: new SliverPadding(
+          padding: new EdgeInsets.only(left: 60.0),
+          sliver: new SliverGrid(
+            gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 4.0,
+                mainAxisSpacing: 4.0,
+                childAspectRatio: 1.0),
+            delegate: new SliverChildBuilderDelegate(
+              (context, i) => new GridTile(
+                child: Card(
+                  child: new Container(
+                    color: color,
+                  ),
+                ),
+                footer: new Container(
+                  color: Colors.white.withOpacity(0.5),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: new Text(
+                      'Grid tile #$i',
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+              childCount: 12,
+            ),
+          ),
         ),
-        SliverToBoxAdapter(
-          child: Container(
-            height: 200,
-            color: Colors.blue,
-          ),
-        ),SliverToBoxAdapter(
-          child: Container(
-            height: 200,
-            color: Colors.cyan,
-          ),
-        ),SliverToBoxAdapter(
-          child: Container(
-            height: 200,
-            color: Colors.yellow,
-          ),
-        ),SliverToBoxAdapter(
-          child: Container(
-            height: 200,
-            color: Colors.yellow,
-          ),
-        ),
-      ],
+      );
+    });
+  }
+
+  Widget _buildSideHeader(int index, Color color) {
+    return new Container(
+      height: 60.0,
+      color: Colors.transparent,
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      alignment: Alignment.centerLeft,
+      child: new CircleAvatar(
+        backgroundColor: color,
+        foregroundColor: Colors.white,
+        child: new Text('$index'),
+      ),
+    );
+  }
+}
+
+class SliverObstructionInjector extends SliverOverlapInjector {
+  /// Creates a sliver that is as tall as the value of the given [handle]'s
+  /// layout extent.
+  ///
+  /// The [handle] must not be null.
+  const SliverObstructionInjector({
+    Key? key,
+    required SliverOverlapAbsorberHandle handle,
+    Widget? child,
+  })  : assert(handle != null),
+        super(key: key, handle: handle, sliver: child);
+
+  @override
+  RenderSliverObstructionInjector createRenderObject(BuildContext context) {
+    return new RenderSliverObstructionInjector(
+      handle: handle,
+    );
+  }
+}
+
+/// A sliver that has a sliver geometry based on the values stored in a
+/// [SliverOverlapAbsorberHandle].
+///
+/// The [RenderSliverOverlapAbsorber] must be an earlier descendant of a common
+/// ancestor [RenderViewport] (probably a [RenderNestedScrollViewViewport]), so
+/// that it will always be laid out before the [RenderSliverObstructionInjector]
+/// during a particular frame.
+class RenderSliverObstructionInjector extends RenderSliverOverlapInjector {
+  /// Creates a sliver that is as tall as the value of the given [handle]'s extent.
+  ///
+  /// The [handle] must not be null.
+  RenderSliverObstructionInjector({
+    required SliverOverlapAbsorberHandle handle,
+    RenderSliver? child,
+  })  : assert(handle != null),
+        _handle = handle,
+        super(handle: handle);
+
+  double? _currentLayoutExtent;
+  double? _currentMaxExtent;
+
+  /// The object that specifies how wide to make the gap injected by this render
+  /// object.
+  ///
+  /// This should be a handle owned by a [RenderSliverOverlapAbsorber] and a
+  /// [RenderNestedScrollViewViewport].
+  SliverOverlapAbsorberHandle get handle => _handle;
+  SliverOverlapAbsorberHandle _handle;
+
+  set handle(SliverOverlapAbsorberHandle value) {
+    assert(value != null);
+    if (handle == value) return;
+    if (attached) {
+      handle.removeListener(markNeedsLayout);
+    }
+    _handle = value;
+    if (attached) {
+      handle.addListener(markNeedsLayout);
+      if (handle.layoutExtent != _currentLayoutExtent ||
+          handle.scrollExtent != _currentMaxExtent) markNeedsLayout();
+    }
+  }
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    handle.addListener(markNeedsLayout);
+    if (handle.layoutExtent != _currentLayoutExtent ||
+        handle.scrollExtent != _currentMaxExtent) markNeedsLayout();
+  }
+
+  @override
+  void performLayout() {
+    _currentLayoutExtent = handle.layoutExtent;
+    _currentMaxExtent = handle.layoutExtent;
+    geometry = new SliverGeometry(
+      scrollExtent: 0.0,
+      paintExtent: _currentLayoutExtent ?? 0,
+      maxPaintExtent: _currentMaxExtent ?? 0,
     );
   }
 }

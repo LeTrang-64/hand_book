@@ -44,6 +44,7 @@ dependencies:
   cached_network_image: ^3.2.3
   google_maps_flutter: ^2.3.0
   floating:
+  fluttertagger: ^2.2.1
   video_player:
   slang:
   slang_flutter:
@@ -52,6 +53,9 @@ dependencies:
   photo_manager:
   image:
   image_gallery_saver:
+  flutter_sticky_header: ^0.7.0
+  sliver_tools: ^0.2.12
+  sticky_headers: ^0.3.0+2
 
 dev_dependencies:
   flutter_test:
